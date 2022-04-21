@@ -1,0 +1,44 @@
+<!-- chat/templates/chat/room.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>Intercom</title>
+</head>
+<body>
+    <img id="camera" scr="">
+    <script>
+
+        const imageSocket = new WebSocket(
+            'ws://'
+            + window.location.host
+            + '/ws/image/'
+        );
+
+        imageSocket.onmessage = function(e) {
+            const data = JSON.parse(e.data);
+            document.getElementById("camera").src = "data:image/jpg;base64," + data.message;
+        };
+
+        imageSocket.onclose = function(e) {
+            console.error('Image socket closed unexpectedly');
+        };
+        
+        const textSocket = new WebSocket(
+            'ws://'
+            + window.location.host
+            + '/ws/text/'
+        );
+
+        textSocket.onmessage = function(e) {
+            const data = JSON.parse(e.data);
+            // пока выводим в коносль
+            console.log(data.message)
+        };
+
+        textSocket.onclose = function(e) {
+            console.error('Text socket closed unexpectedly');
+        };
+    </script>
+</body>
+</html>
